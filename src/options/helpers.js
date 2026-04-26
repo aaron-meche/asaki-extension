@@ -3,9 +3,8 @@ import {
   getConfiguredProviderIds,
   normalizeProviderIdList,
 } from '../lib/settings-helpers.js';
-import type { ProviderId, Settings } from '../lib/types.js';
 
-export function calculateEstimatedCost(settings: Settings | null): string {
+export function calculateEstimatedCost(settings) {
   if (!settings) {
     return '$0.00';
   }
@@ -24,7 +23,7 @@ export function calculateEstimatedCost(settings: Settings | null): string {
   return total === 0 ? '$0.00' : `~$${total.toFixed(5)}`;
 }
 
-export function normalizeSettings(current: Settings): Settings {
+export function normalizeSettings(current) {
   const availableProviders = getConfiguredProviderIds(current);
   const defaultSingleProvider = availableProviders.includes(current.defaultSingleProvider)
     ? current.defaultSingleProvider
@@ -54,14 +53,14 @@ export function normalizeSettings(current: Settings): Settings {
           apiKey: providerSettings.apiKey.trim(),
         },
       ]),
-    ) as Settings['providers'],
+    ),
   };
 }
 
-export function toggleSelectedProvider(list: ProviderId[], provider: ProviderId): ProviderId[] {
+export function toggleSelectedProvider(list, provider) {
   return list.includes(provider)
     ? list.filter((selectedProvider) => selectedProvider !== provider)
     : [...list, provider].filter(
-        (selectedProvider): selectedProvider is ProviderId => PROVIDER_IDS.includes(selectedProvider),
+        (selectedProvider) => PROVIDER_IDS.includes(selectedProvider),
       );
 }

@@ -1,17 +1,13 @@
-<script lang="ts">
-  import type { ProviderId, ProviderResult } from '../types.js';
+<script>
   import { PROVIDER_MAP } from '../constants.js';
   import ResponseCard from './ResponseCard.svelte';
 
   const {
     providers,
     results,
-  }: {
-    providers: ProviderId[];
-    results: Record<string, ProviderResult>;
   } = $props();
 
-  let activeTab = $state<string>('');
+  let activeTab = $state('');
 
   $effect(() => {
     if (providers.length === 1) {
@@ -19,12 +15,12 @@
       return;
     }
 
-    if (providers.length && !providers.includes(activeTab as ProviderId)) {
+    if (providers.length && !providers.includes(activeTab)) {
       activeTab = providers[0];
     }
   });
 
-  const STATUS_DOT: Record<string, string> = {
+  const STATUS_DOT = {
     idle: 'dot--idle',
     loading: 'dot--loading',
     done: 'dot--done',

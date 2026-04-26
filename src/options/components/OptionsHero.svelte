@@ -1,22 +1,17 @@
-<script lang="ts">
+<script>
   const {
     estimatedCost,
     saving,
     saved,
     onSave,
-  }: {
-    estimatedCost: string;
-    saving: boolean;
-    saved: boolean;
-    onSave: () => void;
   } = $props();
 </script>
 
 <header class="hero">
   <div>
     <p class="hero__eyebrow">Asaki Preferences</p>
-    <h1>Configure the models, defaults, and arbitration rules that power your extension.</h1>
-    <p class="hero__copy">Asaki uses your own provider keys locally and routes prompts through <code>rueter-ai</code> for single-model or orchestrated runs.</p>
+    <h1>Keep the extension lean: providers, defaults, and history.</h1>
+    <p class="hero__copy">Everything stays local. Add keys, choose defaults, and save only the controls you actually need.</p>
   </div>
 
   <div class="hero__actions">

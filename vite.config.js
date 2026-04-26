@@ -8,7 +8,7 @@ function chromeExtensionAssets() {
   return {
     name: 'chrome-extension-assets',
     closeBundle() {
-      const pairs: [string, string][] = [
+      const pairs = [
         ['manifest.json', 'dist/manifest.json'],
         ['src/content/content.css', 'dist/content/content.css'],
       ];
@@ -53,9 +53,9 @@ export default defineConfig({
         'panel/index': resolve('src/panel/index.html'),
         'options/index': resolve('src/options/index.html'),
         // Background service worker (bundled as a single ES module)
-        'service-worker': resolve('src/background/service-worker.ts'),
-        // Content script (plain TS, no Svelte)
-        'content/content': resolve('src/content/content.ts'),
+        'service-worker': resolve('src/background/service-worker.js'),
+        // Content script (plain JS, no Svelte)
+        'content/content': resolve('src/content/content.js'),
       },
 
       output: {

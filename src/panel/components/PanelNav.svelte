@@ -1,12 +1,7 @@
-<script lang="ts">
-  type View = 'ask' | 'history';
-
+<script>
   const {
     view,
     onSelect,
-  }: {
-    view: View;
-    onSelect: (view: View) => void | Promise<void>;
   } = $props();
 </script>
 

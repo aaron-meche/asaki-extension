@@ -1,14 +1,13 @@
-<script lang="ts">
+<script>
   import Skeleton from './Skeleton.svelte';
   import { renderMarkdown, stripMarkdown } from '../markdown.js';
-  import type { ProviderResult } from '../types.js';
 
-  const { result, active }: { result: ProviderResult; active: boolean } = $props();
+  const { result, active } = $props();
 
   const tokens = $derived(result.text ? Math.ceil(result.text.length / 4) : 0);
   const renderedText = $derived(result.text ? renderMarkdown(result.text) : '');
 
-  async function copy(asMarkdown: boolean) {
+  async function copy(asMarkdown) {
     const text = asMarkdown ? result.text : stripMarkdown(result.text);
     await navigator.clipboard.writeText(text);
   }

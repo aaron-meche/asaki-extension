@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import OptionsSection from './OptionsSection.svelte';
 
   const {
@@ -6,11 +6,6 @@
     temperature,
     onMaxTokensChange,
     onTemperatureChange,
-  }: {
-    maxTokens: number;
-    temperature: number;
-    onMaxTokensChange: (value: number) => void;
-    onTemperatureChange: (value: number) => void;
   } = $props();
 </script>
 
@@ -29,7 +24,7 @@
         max="4096"
         step="128"
         value={maxTokens}
-        oninput={(event) => onMaxTokensChange(Number((event.currentTarget as HTMLInputElement).value))}
+        oninput={(event) => onMaxTokensChange(Number(event.currentTarget.value))}
       />
       <div class="range-hints"><span>256</span><span>4096</span></div>
     </div>
@@ -44,7 +39,7 @@
         max="1"
         step="0.1"
         value={temperature}
-        oninput={(event) => onTemperatureChange(Number((event.currentTarget as HTMLInputElement).value))}
+        oninput={(event) => onTemperatureChange(Number(event.currentTarget.value))}
       />
       <div class="range-hints"><span>Focused</span><span>Creative</span></div>
     </div>

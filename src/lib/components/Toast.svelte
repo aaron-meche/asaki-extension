@@ -1,23 +1,15 @@
-<script lang="ts" module>
+<script module>
   // Toast state lives at module scope so any component can call showToast().
-  type ToastType = 'info' | 'success' | 'error' | 'warning';
-
-  interface Toast {
-    id: number;
-    message: string;
-    type: ToastType;
-  }
-
-  let toasts = $state<Toast[]>([]);
+  let toasts = $state([]);
   let counter = 0;
 
-  export function showToast(message: string, type: ToastType = 'info', duration = 4000): void {
+  export function showToast(message, type = 'info', duration = 4000) {
     const id = ++counter;
     toasts.push({ id, message, type });
     if (duration > 0) setTimeout(() => dismiss(id), duration);
   }
 
-  function dismiss(id: number): void {
+  function dismiss(id) {
     const idx = toasts.findIndex(t => t.id === id);
     if (idx !== -1) toasts.splice(idx, 1);
   }
@@ -35,8 +27,8 @@
   </div>
 {/if}
 
-<script lang="ts">
-  const ICONS: Record<string, string> = { info: 'ℹ', success: '✓', error: '✕', warning: '⚠' };
+<script>
+  const ICONS = { info: 'ℹ', success: '✓', error: '✕', warning: '⚠' };
 </script>
 
 <style>

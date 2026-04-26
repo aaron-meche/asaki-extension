@@ -1,7 +1,6 @@
 import { PROVIDER_MAP } from '../lib/constants.js';
-import type { HistoryEntry, ProviderId } from '../lib/types.js';
 
-export function formatDate(timestamp: number): string {
+export function formatDate(timestamp) {
   return new Date(timestamp).toLocaleString(undefined, {
     month: 'short',
     day: 'numeric',
@@ -10,7 +9,7 @@ export function formatDate(timestamp: number): string {
   });
 }
 
-export function formatSourceLabel(url: string, title: string): string {
+export function formatSourceLabel(url, title) {
   if (title) {
     return title;
   }
@@ -26,17 +25,17 @@ export function formatSourceLabel(url: string, title: string): string {
   }
 }
 
-export function historyModeLabel(entry: HistoryEntry): string {
+export function historyModeLabel(entry) {
   return entry.mode === 'orchestrated'
     ? `${(entry.selectedProviders ?? []).length || Object.keys(entry.responses).length || 0} models`
     : PROVIDER_MAP[entry.selectedProvider ?? 'anthropic'].label;
 }
 
 export function queryModeLabel(
-  mode: 'orchestrated' | 'single',
-  selectedProviders: ProviderId[],
-  selectedProvider?: ProviderId,
-): string {
+  mode,
+  selectedProviders,
+  selectedProvider,
+) {
   return mode === 'orchestrated'
     ? `${selectedProviders.length} models`
     : PROVIDER_MAP[selectedProvider ?? 'anthropic'].label;

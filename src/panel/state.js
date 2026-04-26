@@ -3,39 +3,16 @@ import {
   getConfiguredProviderIds,
   getDefaultOrchestratedProviders,
 } from '../lib/settings-helpers.js';
-import type {
-  HistoryEntry,
-  PendingQuery,
-  ProviderId,
-  ProviderResult,
-  QueryMode,
-  Settings,
-} from '../lib/types.js';
 
-const FALLBACK_PROVIDER: ProviderId = 'anthropic';
+const FALLBACK_PROVIDER = 'anthropic';
 
-export interface ComposerSelection {
-  mode: QueryMode;
-  provider: ProviderId;
-  selectedProviders: ProviderId[];
-}
-
-export function buildLoadingProviderResults(
-  providers: ProviderId[],
-): Record<string, ProviderResult> {
+export function buildLoadingProviderResults(providers) {
   return Object.fromEntries(
-    providers.map((provider) => [provider, { status: 'loading' as const, text: '' }]),
+    providers.map((provider) => [provider, { status: 'loading', text: '' }]),
   );
 }
 
-export function buildQueryTargets(
-  mode: QueryMode,
-  selectedProvider: ProviderId | undefined,
-  selectedProviders: ProviderId[],
-): {
-  provider?: ProviderId;
-  providers?: ProviderId[];
-} {
+export function buildQueryTargets(mode, selectedProvider, selectedProviders) {
   if (mode === 'single') {
     return {
       provider: selectedProvider,
@@ -54,12 +31,7 @@ export function seedComposerSelection({
   settings,
   selectedProvider,
   selectedProviders,
-}: {
-  mode: QueryMode;
-  settings: Settings | null;
-  selectedProvider?: ProviderId;
-  selectedProviders?: ProviderId[];
-}): ComposerSelection {
+}) {
   if (!settings) {
     return {
       mode,
@@ -98,15 +70,7 @@ export function syncComposerSelection({
   pendingDraft,
   currentQuery,
   inputText,
-}: {
-  settings: Settings;
-  mode: QueryMode;
-  provider: ProviderId;
-  selectedProviders: ProviderId[];
-  pendingDraft: PendingQuery | null;
-  currentQuery: string;
-  inputText: string;
-}): ComposerSelection {
+}) {
   const availableProviders = getConfiguredProviderIds(settings);
 
   if (!pendingDraft && !currentQuery && !inputText.trim()) {
@@ -145,12 +109,7 @@ export function toggleComposerProvider({
   provider,
   selectedProvider,
   selectedProviders,
-}: {
-  mode: QueryMode;
-  provider: ProviderId;
-  selectedProvider: ProviderId;
-  selectedProviders: ProviderId[];
-}): ComposerSelection {
+}) {
   if (mode === 'single') {
     return {
       mode,
@@ -168,10 +127,10 @@ export function toggleComposerProvider({
   };
 }
 
-export function buildHistoryMarkdown(entry: HistoryEntry): string {
+export function buildHistoryMarkdown(entry) {
   const providerSections = Object.entries(entry.responses).map(
     ([provider, response]) =>
-      `## ${PROVIDER_MAP[provider as ProviderId].label}\n\n${response ?? ''}\n`,
+      `## ${PROVIDER_MAP[provider]?.label ?? provider}\n\n${response ?? ''}\n`,
   );
 
   return [
@@ -193,10 +152,10 @@ export function buildHistoryMarkdown(entry: HistoryEntry): string {
 }
 
 function resolveSingleProvider(
-  settings: Settings,
-  availableProviders: ProviderId[],
-  preferredProvider?: ProviderId,
-): ProviderId {
+  settings,
+  availableProviders,
+  preferredProvider,
+) {
   const candidate = preferredProvider ?? settings.defaultSingleProvider;
   return availableProviders.includes(candidate)
     ? candidate

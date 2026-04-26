@@ -1,12 +1,12 @@
 (function () {
-	const globalWindow = window as Window & { __asakiLoaded?: boolean };
+	const globalWindow = window;
 	if (globalWindow.__asakiLoaded) {
 		return;
 	}
 
 	globalWindow.__asakiLoaded = true;
 
-	let highlightedSpans: HTMLElement[] = [];
+	let highlightedSpans = [];
 
 	chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 		if (message.type === 'GET_SELECTION') {
@@ -32,7 +32,7 @@
 		return false;
 	});
 
-	function getPageContext(): string {
+	function getPageContext() {
 		const selection = window.getSelection();
 		const range = selection?.rangeCount ? selection.getRangeAt(0) : null;
 		const anchorNode = range?.commonAncestorContainer ?? document.body;
@@ -45,9 +45,9 @@
 			.slice(0, 6000);
 	}
 
-	function findReadableContainer(node: Node): HTMLElement | null {
+	function findReadableContainer(node) {
 		const element = node.nodeType === Node.ELEMENT_NODE
-			? node as HTMLElement
+			? node
 			: node.parentElement;
 
 		if (!element) {
@@ -59,7 +59,7 @@
 			?? document.body;
 	}
 
-	function highlightCurrentSelection(): void {
+	function highlightCurrentSelection() {
 		clearHighlight();
 
 		const selection = window.getSelection();
@@ -79,7 +79,7 @@
 		}
 	}
 
-	function clearHighlight(): void {
+	function clearHighlight() {
 		for (const span of highlightedSpans) {
 			const parent = span.parentNode;
 			if (!parent) {

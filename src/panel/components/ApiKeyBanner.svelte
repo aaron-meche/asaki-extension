@@ -1,5 +1,5 @@
-<script lang="ts">
-  const { onOpenSettings }: { onOpenSettings: () => void } = $props();
+<script>
+  const { onOpenSettings } = $props();
 </script>
 
 <div class="banner">

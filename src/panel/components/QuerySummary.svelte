@@ -1,14 +1,9 @@
-<script lang="ts">
+<script>
   const {
     modeLabel,
     sourceLabel,
     query,
     onEdit,
-  }: {
-    modeLabel: string;
-    sourceLabel?: string;
-    query: string;
-    onEdit: () => void;
   } = $props();
 </script>
 

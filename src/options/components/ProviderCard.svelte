@@ -1,13 +1,4 @@
-<script lang="ts">
-  import type {
-    ModelMeta,
-    ProviderId,
-    ProviderMeta,
-    ProviderSettings,
-  } from '../../lib/types.js';
-
-  type KeyStatus = 'valid' | 'invalid' | 'idle';
-
+<script>
   const {
     provider,
     providerSettings,
@@ -17,15 +8,6 @@
     onApiKeyChange,
     onModelChange,
     onValidate,
-  }: {
-    provider: ProviderMeta;
-    providerSettings: ProviderSettings;
-    validating: boolean;
-    keyStatus: KeyStatus;
-    onEnabledChange: (enabled: boolean) => void;
-    onApiKeyChange: (apiKey: string) => void;
-    onModelChange: (modelIndex: number) => void;
-    onValidate: (provider: ProviderId) => void;
   } = $props();
 
   const activeModel = $derived(
@@ -35,13 +17,13 @@
     `${activeModel.label} · $${activeModel.inputCost}/${activeModel.outputCost} per 1M`,
   );
 
-  const STATUS_ICON: Record<KeyStatus, string> = {
+  const STATUS_ICON = {
     valid: '✓',
     invalid: '✕',
     idle: '·',
   };
 
-  function modelOptionLabel(model: ModelMeta): string {
+  function modelOptionLabel(model) {
     return `${model.label} · $${model.inputCost}/${model.outputCost} per 1M`;
   }
 </script>
@@ -60,7 +42,7 @@
       <input
         type="checkbox"
         checked={providerSettings.enabled}
-        onchange={(event) => onEnabledChange((event.currentTarget as HTMLInputElement).checked)}
+        onchange={(event) => onEnabledChange(event.currentTarget.checked)}
       />
       <span class="toggle__track"></span>
     </label>
@@ -77,7 +59,7 @@
           value={providerSettings.apiKey}
           autocomplete="off"
           placeholder="Paste your key"
-          oninput={(event) => onApiKeyChange((event.currentTarget as HTMLInputElement).value)}
+          oninput={(event) => onApiKeyChange(event.currentTarget.value)}
         />
         <button
           class="btn btn-secondary btn-sm"
@@ -98,7 +80,7 @@
         id="model-{provider.id}"
         class="select"
         value={providerSettings.modelIndex}
-        onchange={(event) => onModelChange(Number((event.currentTarget as HTMLSelectElement).value))}
+        onchange={(event) => onModelChange(Number(event.currentTarget.value))}
       >
         {#each provider.models as model}
           <option value={model.index}>{modelOptionLabel(model)}</option>

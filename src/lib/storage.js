@@ -1,22 +1,19 @@
-// Typed wrappers around chrome.storage.
-// All keys are namespaced constants so typos are caught at compile time.
-
-import type { HistoryEntry, ProviderId, QueryMode, Settings } from './types.js';
+// Storage helpers for settings and history.
 import { DEFAULT_SETTINGS, MAX_HISTORY } from './constants.js';
 
 // ── Low-level helpers ─────────────────────────────────────────────────────────
 
-function syncGet<T>(key: string): Promise<T | undefined> {
+function syncGet(key) {
   return new Promise((resolve, reject) =>
     chrome.storage.sync.get(key, result => {
       chrome.runtime.lastError
         ? reject(new Error(chrome.runtime.lastError.message))
-        : resolve(result[key] as T | undefined);
+        : resolve(result[key]);
     }),
   );
 }
 
-function syncSet(key: string, value: unknown): Promise<void> {
+function syncSet(key, value) {
   return new Promise((resolve, reject) =>
     chrome.storage.sync.set({ [key]: value }, () => {
       chrome.runtime.lastError
@@ -26,17 +23,17 @@ function syncSet(key: string, value: unknown): Promise<void> {
   );
 }
 
-function localGet<T>(key: string): Promise<T | undefined> {
+function localGet(key) {
   return new Promise((resolve, reject) =>
     chrome.storage.local.get(key, result => {
       chrome.runtime.lastError
         ? reject(new Error(chrome.runtime.lastError.message))
-        : resolve(result[key] as T | undefined);
+        : resolve(result[key]);
     }),
   );
 }
 
-function localSet(key: string, value: unknown): Promise<void> {
+function localSet(key, value) {
   return new Promise((resolve, reject) =>
     chrome.storage.local.set({ [key]: value }, () => {
       chrome.runtime.lastError
@@ -48,29 +45,26 @@ function localSet(key: string, value: unknown): Promise<void> {
 
 // ── Settings ──────────────────────────────────────────────────────────────────
 
-export async function loadSettings(): Promise<Settings> {
-  const stored = await syncGet<Partial<Settings>>('settings');
-  return normalizeSettings(deepMerge(DEFAULT_SETTINGS, stored ?? {}) as Settings);
+export async function loadSettings() {
+  const stored = await syncGet('settings');
+  return normalizeSettings(deepMerge(DEFAULT_SETTINGS, stored ?? {}));
 }
 
-export async function saveSettings(partial: Partial<Settings>): Promise<Settings> {
+export async function saveSettings(partial) {
   const current = await loadSettings();
-  const next = normalizeSettings(deepMerge(current, partial) as Settings);
+  const next = normalizeSettings(deepMerge(current, partial));
   await syncSet('settings', next);
   return next;
 }
 
-export function watchSettings(onChange: (settings: Settings) => void): () => void {
-  const handler = (
-    changes: Record<string, chrome.storage.StorageChange>,
-    areaName: string,
-  ) => {
+export function watchSettings(onChange) {
+  const handler = (changes, areaName) => {
     if (areaName !== 'sync' || !changes.settings) {
       return;
     }
 
     const nextSettings = normalizeSettings(
-      deepMerge(DEFAULT_SETTINGS, (changes.settings.newValue as Partial<Settings> | undefined) ?? {}) as Settings,
+      deepMerge(DEFAULT_SETTINGS, changes.settings.newValue ?? {}),
     );
     onChange(nextSettings);
   };
@@ -81,18 +75,18 @@ export function watchSettings(onChange: (settings: Settings) => void): () => voi
 
 // ── History ───────────────────────────────────────────────────────────────────
 
-export async function loadHistory(): Promise<HistoryEntry[]> {
-  const history = (await localGet<HistoryEntry[]>('history')) ?? [];
+export async function loadHistory() {
+  const history = (await localGet('history')) ?? [];
   return history.map(normalizeHistoryEntry);
 }
 
-export async function appendHistory(entry: HistoryEntry): Promise<void> {
+export async function appendHistory(entry) {
   const history = await loadHistory();
   const next = [entry, ...history].slice(0, MAX_HISTORY);
   await localSet('history', next);
 }
 
-export async function updateHistory(id: string, patch: Partial<HistoryEntry>): Promise<void> {
+export async function updateHistory(id, patch) {
   const history = await loadHistory();
   const idx = history.findIndex(e => e.id === id);
   if (idx === -1) return;
@@ -100,36 +94,36 @@ export async function updateHistory(id: string, patch: Partial<HistoryEntry>): P
   await localSet('history', history);
 }
 
-export async function deleteHistoryEntry(id: string): Promise<void> {
+export async function deleteHistoryEntry(id) {
   const history = await loadHistory();
   await localSet('history', history.filter(e => e.id !== id));
 }
 
-export async function clearHistory(): Promise<void> {
+export async function clearHistory() {
   await localSet('history', []);
 }
 
 // ── Utility ───────────────────────────────────────────────────────────────────
 
-function deepMerge<T extends object>(base: T, override: Record<string, unknown>): T {
-  const result: Record<string, unknown> = { ...(base as Record<string, unknown>) };
+function deepMerge(base, override) {
+  const result = { ...base };
   for (const [k, v] of Object.entries(override)) {
     result[k] =
       v !== null && typeof v === 'object' && !Array.isArray(v)
         ? deepMerge(
-            ((base as Record<string, unknown>)[k] as Record<string, unknown>) ?? {},
-            v as Record<string, unknown>,
+            base[k] ?? {},
+            v,
           )
         : v;
   }
-  return result as T;
+  return result;
 }
 
-export function generateId(): string {
+export function generateId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
-function normalizeSettings(settings: Settings): Settings {
+function normalizeSettings(settings) {
   return {
     ...DEFAULT_SETTINGS,
     ...settings,
@@ -151,9 +145,9 @@ function normalizeSettings(settings: Settings): Settings {
 }
 
 function normalizeProviderSettings(
-  settings: Settings['providers'][ProviderId] | undefined,
-  fallback: Settings['providers'][ProviderId],
-): Settings['providers'][ProviderId] {
+  settings,
+  fallback,
+) {
   return {
     enabled: settings?.enabled ?? fallback.enabled,
     apiKey: settings?.apiKey ?? fallback.apiKey,
@@ -161,14 +155,14 @@ function normalizeProviderSettings(
   };
 }
 
-function normalizeHistoryEntry(entry: HistoryEntry): HistoryEntry {
+function normalizeHistoryEntry(entry) {
   return {
     id: entry.id,
     timestamp: entry.timestamp,
     query: entry.query,
     sourceUrl: entry.sourceUrl ?? '',
     sourceTitle: entry.sourceTitle ?? '',
-    mode: (entry.mode ?? 'orchestrated') as QueryMode,
+    mode: entry.mode ?? 'orchestrated',
     selectedProvider: entry.selectedProvider,
     selectedProviders: normalizeProviderList(entry.selectedProviders, undefined),
     customPrompt: entry.customPrompt,
@@ -177,13 +171,10 @@ function normalizeHistoryEntry(entry: HistoryEntry): HistoryEntry {
   };
 }
 
-function normalizeProviderList(
-  providers: ProviderId[] | undefined,
-  fallback: ProviderId[] | undefined,
-): ProviderId[] {
-  const validProviders: ProviderId[] = ['anthropic', 'openai', 'gemini', 'grok'];
+function normalizeProviderList(providers, fallback) {
+  const validProviders = ['anthropic', 'openai', 'gemini', 'grok'];
   const normalized = (providers ?? fallback ?? []).filter(
-    (provider): provider is ProviderId => validProviders.includes(provider),
+    (provider) => validProviders.includes(provider),
   );
 
   return Array.from(new Set(normalized));

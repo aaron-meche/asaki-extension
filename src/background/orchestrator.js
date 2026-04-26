@@ -8,16 +8,10 @@ import { runConsensus } from '../lib/consensus.js';
 import { MAX_PAGE_CONTEXT_CHARS } from '../lib/constants.js';
 import { appendHistory, generateId, loadSettings, updateHistory } from '../lib/storage.js';
 import { QueryCancelledError, buildEffectivePrompt, getEnabledProviders, promptProvider } from '../lib/rueter.js';
-import type { ProviderId, QueryMode, SwMessage } from '../lib/types.js';
 
-interface ActiveRun {
-	id: string;
-	cancelled: boolean;
-}
+let activeRun = null;
 
-let activeRun: ActiveRun | null = null;
-
-export function cancelQuery(): void {
+export function cancelQuery() {
 	if (activeRun) {
 		activeRun.cancelled = true;
 		activeRun = null;
@@ -25,18 +19,12 @@ export function cancelQuery(): void {
 }
 
 export async function runQuery(
-	query: string,
-	sourceUrl: string,
-	sourceTitle: string,
-	send: (msg: SwMessage) => void,
-	options: {
-		customPrompt?: string;
-		pageText?: string;
-		mode?: QueryMode;
-		selectedProvider?: ProviderId;
-		selectedProviders?: ProviderId[];
-	} = {},
-): Promise<void> {
+	query,
+	sourceUrl,
+	sourceTitle,
+	send,
+	options = {},
+) {
 	const trimmedQuery = query.trim();
 	if (!trimmedQuery) {
 		send({ type: 'QUERY_ERROR', error: 'Enter a prompt or highlight some text first.' });
@@ -69,7 +57,7 @@ export async function runQuery(
 
 		const prompt = buildEffectivePrompt(trimmedQuery, options.customPrompt, pageContext);
 
-		let historyId: string | undefined;
+		let historyId;
 		if (settings.historyEnabled) {
 			historyId = generateId();
 			await appendHistory({
@@ -103,7 +91,7 @@ export async function runQuery(
 			customPrompt: options.customPrompt,
 		});
 
-		const responses: Partial<Record<ProviderId, string>> = {};
+		const responses = {};
 
 		await Promise.allSettled(
 			resolved.providers.map(async (provider) => {
@@ -136,7 +124,7 @@ export async function runQuery(
 						text,
 						cost: result.cost,
 					});
-				} catch (error: unknown) {
+				} catch (error) {
 					if (!isActive(run) || error instanceof QueryCancelledError) {
 						return;
 					}
@@ -191,7 +179,7 @@ export async function runQuery(
 					if (historyId) {
 						await updateHistory(historyId, { consensus: consensus.text });
 					}
-				} catch (error: unknown) {
+				} catch (error) {
 					if (!isActive(run) || error instanceof QueryCancelledError) {
 						return;
 					}
@@ -217,16 +205,11 @@ export async function runQuery(
 }
 
 function resolveExecutionMode(
-	enabledProviders: ProviderId[],
-	requestedMode: QueryMode,
-	preferredProvider: ProviderId,
-	preferredProviders: ProviderId[],
-): {
-	mode: QueryMode;
-	providers: ProviderId[];
-	selectedProvider?: ProviderId;
-	selectedProviders?: ProviderId[];
-} {
+	enabledProviders,
+	requestedMode,
+	preferredProvider,
+	preferredProviders,
+) {
 	if (requestedMode === 'single' || enabledProviders.length === 1) {
 		const selectedProvider = enabledProviders.includes(preferredProvider)
 			? preferredProvider
@@ -251,14 +234,14 @@ function resolveExecutionMode(
 }
 
 function resolveConsensusProvider(
-	successfulProviders: ProviderId[],
-	configuredProvider: ProviderId,
-): ProviderId {
+	successfulProviders,
+	configuredProvider,
+) {
 	return successfulProviders.includes(configuredProvider)
 		? configuredProvider
 		: successfulProviders[0];
 }
 
-function isActive(run: ActiveRun): boolean {
+function isActive(run) {
 	return activeRun?.id === run.id && !run.cancelled;
 }

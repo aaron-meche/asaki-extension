@@ -1,7 +1,6 @@
-<script lang="ts">
+<script>
   import ProviderPicker from '../../lib/components/ProviderPicker.svelte';
   import { DEFAULT_SYSTEM_PROMPT, PROVIDER_IDS } from '../../lib/constants.js';
-  import type { ProviderId } from '../../lib/types.js';
   import OptionsSection from './OptionsSection.svelte';
 
   const {
@@ -13,15 +12,6 @@
     onPageContextEnabledChange,
     onSystemPromptChange,
     onResetSystemPrompt,
-  }: {
-    consensusProvider: ProviderId;
-    availableProviderIds: ProviderId[];
-    pageContextEnabled: boolean;
-    systemPrompt: string;
-    onConsensusProviderChange: (provider: ProviderId) => void;
-    onPageContextEnabledChange: (enabled: boolean) => void;
-    onSystemPromptChange: (prompt: string) => void;
-    onResetSystemPrompt: () => void;
   } = $props();
 </script>
 
@@ -55,8 +45,7 @@
             id="page-context"
             type="checkbox"
             checked={pageContextEnabled}
-            onchange={(event) =>
-              onPageContextEnabledChange((event.currentTarget as HTMLInputElement).checked)}
+            onchange={(event) => onPageContextEnabledChange(event.currentTarget.checked)}
           />
           <span class="toggle__track"></span>
         </label>
@@ -71,7 +60,7 @@
       class="textarea"
       rows={5}
       value={systemPrompt}
-      oninput={(event) => onSystemPromptChange((event.currentTarget as HTMLTextAreaElement).value)}
+      oninput={(event) => onSystemPromptChange(event.currentTarget.value)}
     ></textarea>
     <div class="field__row field__row--spread">
       <p class="field__hint">Applied to each provider call before the user prompt.</p>

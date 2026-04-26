@@ -1,22 +1,13 @@
 import { CONSENSUS_PROMPT_TEMPLATE, PROVIDER_MAP, QUERY_TIMEOUT_MS } from './constants.js';
 import { promptProvider } from './rueter.js';
-import type { ProviderId, Settings } from './types.js';
-
-export interface ConsensusRunResult {
-  text: string;
-  confidence: string;
-  provider: ProviderId;
-}
 
 export async function runConsensus(
-  providerResponses: Partial<Record<ProviderId, string>>,
-  originalQuery: string,
-  provider: ProviderId,
-  settings: Settings,
-  opts: {
-    isCancelled?: () => boolean;
-  } = {},
-): Promise<ConsensusRunResult> {
+  providerResponses,
+  originalQuery,
+  provider,
+  settings,
+  opts = {},
+) {
   const providerConfig = settings.providers[provider];
   if (!providerConfig?.apiKey.trim()) {
     throw new Error(`No API key configured for ${PROVIDER_MAP[provider].label} consensus.`);
@@ -29,7 +20,7 @@ export async function runConsensus(
 
   const responsesBlock = entries
     .map(([id, text], index) => {
-      const providerLabel = PROVIDER_MAP[id as ProviderId]?.label ?? id;
+      const providerLabel = PROVIDER_MAP[id]?.label ?? id;
       return `### Response ${index + 1} - ${providerLabel}\n\n${text}`;
     })
     .join('\n\n---\n\n');
@@ -57,7 +48,7 @@ export async function runConsensus(
   };
 }
 
-function parseConfidence(text: string): string {
+function parseConfidence(text) {
   const match = text.match(/confidence(?:\s*&\s*sources)?[:\s-]+(high|medium|low)/i);
   return match
     ? `${match[1].charAt(0).toUpperCase()}${match[1].slice(1).toLowerCase()}`

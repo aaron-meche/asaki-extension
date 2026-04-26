@@ -1,5 +1,4 @@
-<script lang="ts">
-  import type { Settings } from '../../lib/types.js';
+<script>
   import OptionsSection from './OptionsSection.svelte';
 
   const {
@@ -7,16 +6,11 @@
     theme,
     onHistoryEnabledChange,
     onThemeChange,
-  }: {
-    historyEnabled: boolean;
-    theme: Settings['theme'];
-    onHistoryEnabledChange: (enabled: boolean) => void;
-    onThemeChange: (theme: Settings['theme']) => void;
   } = $props();
 
-  const THEME_OPTIONS: Settings['theme'][] = ['system', 'light', 'dark'];
+  const THEME_OPTIONS = ['system', 'light', 'dark'];
 
-  function formatThemeLabel(nextTheme: Settings['theme']): string {
+  function formatThemeLabel(nextTheme) {
     return nextTheme.charAt(0).toUpperCase() + nextTheme.slice(1);
   }
 </script>
@@ -36,8 +30,7 @@
           <input
             type="checkbox"
             checked={historyEnabled}
-            onchange={(event) =>
-              onHistoryEnabledChange((event.currentTarget as HTMLInputElement).checked)}
+            onchange={(event) => onHistoryEnabledChange(event.currentTarget.checked)}
           />
           <span class="toggle__track"></span>
         </label>

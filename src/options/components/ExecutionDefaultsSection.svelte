@@ -1,7 +1,6 @@
-<script lang="ts">
+<script>
   import ProviderPicker from '../../lib/components/ProviderPicker.svelte';
   import { PROVIDER_IDS } from '../../lib/constants.js';
-  import type { ProviderId, QueryMode } from '../../lib/types.js';
   import OptionsSection from './OptionsSection.svelte';
 
   const {
@@ -12,14 +11,6 @@
     onDefaultModeChange,
     onDefaultSingleProviderChange,
     onDefaultOrchestratedProviderToggle,
-  }: {
-    defaultMode: QueryMode;
-    defaultSingleProvider: ProviderId;
-    defaultOrchestratedProviders: ProviderId[];
-    availableProviderIds: ProviderId[];
-    onDefaultModeChange: (mode: QueryMode) => void;
-    onDefaultSingleProviderChange: (provider: ProviderId) => void;
-    onDefaultOrchestratedProviderToggle: (provider: ProviderId) => void;
   } = $props();
 </script>
 

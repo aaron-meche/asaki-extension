@@ -1,7 +1,6 @@
-<script lang="ts">
+<script>
   import ConsensusCard from '../../lib/components/ConsensusCard.svelte';
   import ProviderTabs from '../../lib/components/ProviderTabs.svelte';
-  import type { ConsensusResult, ProviderId, ProviderResult, QueryMode } from '../../lib/types.js';
 
   const {
     currentMode,
@@ -12,15 +11,6 @@
     onCancel,
     onRerun,
     onEdit,
-  }: {
-    currentMode: QueryMode;
-    activeProviders: ProviderId[];
-    consensusResult: ConsensusResult;
-    providerResults: Record<string, ProviderResult>;
-    isQuerying: boolean;
-    onCancel: () => void;
-    onRerun: () => void;
-    onEdit: () => void;
   } = $props();
 </script>
 

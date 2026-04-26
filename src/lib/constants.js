@@ -1,9 +1,7 @@
 // Provider metadata derived from rueter-ai's models catalog.
 // This file is the single place to update if models or costs change.
 
-import type { ProviderId, ProviderMeta, Settings } from './types.js';
-
-export const PROVIDERS: ProviderMeta[] = [
+export const PROVIDERS = [
   {
     id: 'anthropic',
     label: 'Anthropic',
@@ -49,11 +47,11 @@ export const PROVIDERS: ProviderMeta[] = [
   },
 ];
 
-export const PROVIDER_IDS = PROVIDERS.map(p => p.id) as ProviderId[];
+export const PROVIDER_IDS = PROVIDERS.map((provider) => provider.id);
 
-export const PROVIDER_MAP: Record<ProviderId, ProviderMeta> = Object.fromEntries(
-  PROVIDERS.map(p => [p.id, p]),
-) as Record<ProviderId, ProviderMeta>;
+export const PROVIDER_MAP = Object.fromEntries(
+  PROVIDERS.map((provider) => [provider.id, provider]),
+);
 
 export const DEFAULT_SYSTEM_PROMPT =
   'You are a helpful, accurate assistant. The user has highlighted the following text from a webpage and wants your analysis. Be concise, precise, and cite your reasoning.';
@@ -79,7 +77,7 @@ export const CONSENSUS_PROMPT_TEMPLATE = `You are an expert answer arbitrator. Y
 
 {{QUERY}}`;
 
-export const DEFAULT_SETTINGS: Settings = {
+export const DEFAULT_SETTINGS = {
   providers: {
     anthropic: { enabled: true,  apiKey: '', modelIndex: 2 },
     openai:    { enabled: true,  apiKey: '', modelIndex: 2 },

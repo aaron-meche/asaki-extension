@@ -1,17 +1,16 @@
-<script lang="ts">
+<script>
   import Skeleton from './Skeleton.svelte';
   import { PROVIDER_MAP } from '../constants.js';
   import { renderMarkdown, stripMarkdown } from '../markdown.js';
-  import type { ConsensusResult } from '../types.js';
 
-  const { result }: { result: ConsensusResult } = $props();
+  const { result } = $props();
 
   let collapsed = $state(false);
 
   const renderedText = $derived(result.text ? renderMarkdown(result.text) : '');
   const providerLabel = $derived(result.provider ? PROVIDER_MAP[result.provider].label : '');
 
-  async function copy(asMarkdown: boolean) {
+  async function copy(asMarkdown) {
     const text = asMarkdown ? result.text : stripMarkdown(result.text);
     await navigator.clipboard.writeText(text);
   }

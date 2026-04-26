@@ -1,17 +1,11 @@
-<script lang="ts">
-  import type { Settings } from '../../lib/types.js';
-
+<script>
   const {
     theme,
     onCycleTheme,
     onOpenSettings,
-  }: {
-    theme: Settings['theme'];
-    onCycleTheme: () => void;
-    onOpenSettings: () => void;
   } = $props();
 
-  const THEME_ICON: Record<Settings['theme'], string> = {
+  const THEME_ICON = {
     system: '◐',
     light: '☼',
     dark: '☾',
@@ -23,7 +17,7 @@
     <div class="brand__glyph">A</div>
     <div>
       <p class="brand__eyebrow">Asaki</p>
-      <h1 class="brand__title">Ask smarter than one model at a time.</h1>
+      <h1 class="brand__title">Compare models quickly.</h1>
     </div>
   </div>
 

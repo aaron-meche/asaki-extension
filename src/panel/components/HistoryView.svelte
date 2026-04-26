@@ -1,7 +1,6 @@
-<script lang="ts">
+<script>
   import { PROVIDER_MAP } from '../../lib/constants.js';
   import { renderMarkdown } from '../../lib/markdown.js';
-  import type { HistoryEntry, ProviderId } from '../../lib/types.js';
   import { formatDate, formatSourceLabel, historyModeLabel } from '../helpers.js';
 
   const {
@@ -12,14 +11,6 @@
     onRerunHistory,
     onExportEntry,
     onDeleteEntry,
-  }: {
-    history: HistoryEntry[];
-    activeHistoryEntry: HistoryEntry | null;
-    onClearHistory: () => void | Promise<void>;
-    onSelectEntry: (id: string) => void;
-    onRerunHistory: (entry: HistoryEntry) => void;
-    onExportEntry: (entry: HistoryEntry) => void;
-    onDeleteEntry: (entry: HistoryEntry) => void | Promise<void>;
   } = $props();
 </script>
 
@@ -86,7 +77,7 @@
 
           {#each Object.entries(activeHistoryEntry.responses) as [provider, response]}
             <section class="history-block">
-              <h4>{PROVIDER_MAP[provider as ProviderId].label}</h4>
+              <h4>{PROVIDER_MAP[provider]?.label ?? provider}</h4>
               <div class="prose">
                 <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                 {@html renderMarkdown(response ?? '')}

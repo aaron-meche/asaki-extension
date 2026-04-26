@@ -1,7 +1,6 @@
 import { PROVIDER_IDS, PROVIDERS } from './constants.js';
-import type { ProviderId, Settings } from './types.js';
 
-export function applyTheme(theme: Settings['theme']): void {
+export function applyTheme(theme) {
   if (theme === 'system') {
     document.documentElement.removeAttribute('data-theme');
     return;
@@ -10,7 +9,7 @@ export function applyTheme(theme: Settings['theme']): void {
   document.documentElement.setAttribute('data-theme', theme);
 }
 
-export function getConfiguredProviderIds(settings: Settings): ProviderId[] {
+export function getConfiguredProviderIds(settings) {
   return PROVIDERS
     .filter(
       (provider) =>
@@ -20,7 +19,7 @@ export function getConfiguredProviderIds(settings: Settings): ProviderId[] {
     .map((provider) => provider.id);
 }
 
-export function getDefaultOrchestratedProviders(settings: Settings): ProviderId[] {
+export function getDefaultOrchestratedProviders(settings) {
   const availableProviders = getConfiguredProviderIds(settings);
   const preferredProviders = settings.defaultOrchestratedProviders.filter((provider) =>
     availableProviders.includes(provider),
@@ -29,8 +28,8 @@ export function getDefaultOrchestratedProviders(settings: Settings): ProviderId[
   return preferredProviders.length > 0 ? preferredProviders : availableProviders;
 }
 
-export function normalizeProviderIdList(providers: ProviderId[]): ProviderId[] {
+export function normalizeProviderIdList(providers) {
   return Array.from(
-    new Set(providers.filter((provider): provider is ProviderId => PROVIDER_IDS.includes(provider))),
+    new Set(providers.filter((provider) => PROVIDER_IDS.includes(provider))),
   );
 }

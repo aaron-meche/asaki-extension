@@ -5,7 +5,7 @@ marked.setOptions({
   gfm: true,
 });
 
-const HTML_ESCAPES: Record<string, string> = {
+const HTML_ESCAPES = {
   '&': '&amp;',
   '<': '&lt;',
   '>': '&gt;',
@@ -13,11 +13,11 @@ const HTML_ESCAPES: Record<string, string> = {
   "'": '&#39;',
 };
 
-export function renderMarkdown(text: string): string {
-  return marked.parse(escapeHtml(text), { async: false }) as string;
+export function renderMarkdown(text) {
+  return marked.parse(escapeHtml(text), { async: false });
 }
 
-export function stripMarkdown(text: string): string {
+export function stripMarkdown(text) {
   return text
     .replace(/```[\s\S]*?```/g, '')
     .replace(/`([^`]+)`/g, '$1')
@@ -31,6 +31,6 @@ export function stripMarkdown(text: string): string {
     .trim();
 }
 
-function escapeHtml(text: string): string {
+function escapeHtml(text) {
   return text.replace(/[&<>"']/g, char => HTML_ESCAPES[char] ?? char);
 }

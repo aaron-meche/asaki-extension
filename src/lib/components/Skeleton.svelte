@@ -1,5 +1,5 @@
-<script lang="ts">
-  const { lines = 4 }: { lines?: number } = $props();
+<script>
+  const { lines = 4 } = $props();
   const widths = [100, 88, 95, 72, 84, 68, 91];
 </script>
 

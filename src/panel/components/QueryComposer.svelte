@@ -1,7 +1,6 @@
-<script lang="ts">
+<script>
   import ProviderPicker from '../../lib/components/ProviderPicker.svelte';
   import { PROVIDER_MAP } from '../../lib/constants.js';
-  import type { PendingQuery, ProviderId, QueryMode } from '../../lib/types.js';
   import { formatSourceLabel } from '../helpers.js';
 
   const {
@@ -22,24 +21,6 @@
     onToggleProvider,
     onSubmit,
     onHide,
-  }: {
-    inputText: string;
-    composerMode: QueryMode;
-    composerProvider: ProviderId;
-    composerSelectedProviders: ProviderId[];
-    pendingDraft: PendingQuery | null;
-    currentSourceUrl: string;
-    currentSourceTitle: string;
-    configuredProviderIds: ProviderId[];
-    visibleComposerProviders: ProviderId[];
-    canSubmit: boolean;
-    isQuerying: boolean;
-    currentQuery: string;
-    onInputChange: (value: string) => void;
-    onSwitchMode: (mode: QueryMode) => void;
-    onToggleProvider: (provider: ProviderId) => void;
-    onSubmit: () => void;
-    onHide: () => void;
   } = $props();
 </script>
 
@@ -83,7 +64,7 @@
     placeholder={pendingDraft?.isCustom
       ? 'Edit the prompt before sending it to Asaki...'
       : 'Highlight text on a page and use Ask Asaki, or write your own prompt here...'}
-    oninput={(event) => onInputChange((event.currentTarget as HTMLTextAreaElement).value)}
+    oninput={(event) => onInputChange(event.currentTarget.value)}
     onkeydown={(event) => {
       if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
         event.preventDefault();

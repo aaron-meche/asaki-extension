@@ -110,7 +110,7 @@ src/
   lib/          # shared types, storage, provider logic, consensus helpers
 static/icons/   # extension and provider icons
 manifest.json   # Chrome extension manifest
-vite.config.ts  # build configuration
+vite.config.js  # build configuration
 ```
 
 ## Data and Privacy

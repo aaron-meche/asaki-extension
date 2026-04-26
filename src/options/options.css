@@ -1,18 +1,16 @@
 .options {
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top left, color-mix(in srgb, var(--accent) 8%, transparent), transparent 24%),
-    linear-gradient(180deg, color-mix(in srgb, var(--bg) 95%, white 5%), var(--bg));
+  background: color-mix(in srgb, var(--bg) 97%, white 3%);
   color: var(--fg);
 }
 
 .options .hero {
   max-width: 1040px;
   margin: 0 auto;
-  padding: 36px 24px 28px;
+  padding: 30px 24px 24px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 24px;
+  gap: 20px;
   align-items: end;
 }
 
@@ -25,9 +23,9 @@
 }
 
 .options .hero h1 {
-  font-size: clamp(30px, 4vw, 42px);
-  line-height: 1.04;
-  max-width: 12ch;
+  font-size: clamp(28px, 4vw, 38px);
+  line-height: 1.08;
+  max-width: 14ch;
   margin-bottom: 12px;
 }
 
@@ -46,10 +44,10 @@
 }
 
 .options .hero__cost {
-  padding: 16px 18px;
+  padding: 14px 16px;
   border: 1px solid var(--border);
-  border-radius: 20px;
-  background: color-mix(in srgb, var(--bg-card) 92%, white 8%);
+  border-radius: 16px;
+  background: var(--bg-card);
   box-shadow: var(--shadow);
 }
 
@@ -73,7 +71,7 @@
 }
 
 .options .section {
-  padding: 26px 0 32px;
+  padding: 22px 0 28px;
   border-top: 1px solid var(--border);
 }
 
@@ -105,13 +103,13 @@
 .options .card,
 .options .provider-card {
   border: 1px solid var(--border);
-  border-radius: 20px;
-  background: color-mix(in srgb, var(--bg-card) 94%, white 6%);
+  border-radius: 16px;
+  background: var(--bg-card);
   box-shadow: var(--shadow);
 }
 
 .options .card {
-  padding: 20px;
+  padding: 18px;
 }
 
 .options .card--stack {
@@ -137,8 +135,8 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  padding: 20px 20px 14px;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--provider-color) 12%, transparent), transparent);
+  padding: 18px 18px 12px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--provider-color) 10%, transparent), transparent);
 }
 
 .options .provider-card__identity {
@@ -168,7 +166,7 @@
 }
 
 .options .provider-card__body {
-  padding: 0 20px 20px;
+  padding: 0 18px 18px;
   display: grid;
   gap: 14px;
 }
@@ -207,8 +205,8 @@
 .options .textarea {
   width: 100%;
   border: 1px solid var(--border);
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--bg-card) 96%, white 4%);
+  border-radius: 12px;
+  background: var(--bg-subtle);
   color: var(--fg);
   font-family: var(--font);
   font-size: 13px;

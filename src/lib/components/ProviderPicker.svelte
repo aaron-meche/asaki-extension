@@ -1,6 +1,5 @@
-<script lang="ts">
+<script>
   import { PROVIDER_MAP } from '../constants.js';
-  import type { ProviderId } from '../types.js';
 
   const {
     title,
@@ -11,29 +10,20 @@
     available = [],
     emptyMessage = 'No providers available.',
     onToggle,
-  }: {
-    title: string;
-    description?: string;
-    selectionMode: 'single' | 'multi';
-    selected: ProviderId[];
-    visible: ProviderId[];
-    available: ProviderId[];
-    emptyMessage?: string;
-    onToggle: (provider: ProviderId) => void;
   } = $props();
 
   const iconUrls = Object.fromEntries(
-    (['anthropic', 'openai', 'gemini', 'grok'] as ProviderId[]).map((provider) => [
+    ['anthropic', 'openai', 'gemini', 'grok'].map((provider) => [
       provider,
       chrome.runtime.getURL(`icons/${provider}.svg`),
     ]),
-  ) as Record<ProviderId, string>;
+  );
 
-  function isSelected(provider: ProviderId): boolean {
+  function isSelected(provider) {
     return selected.includes(provider);
   }
 
-  function isAvailable(provider: ProviderId): boolean {
+  function isAvailable(provider) {
     return available.includes(provider);
   }
 </script>

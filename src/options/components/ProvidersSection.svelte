@@ -1,10 +1,7 @@
-<script lang="ts">
+<script>
   import { PROVIDERS } from '../../lib/constants.js';
-  import type { ProviderId, ProviderSettings, Settings } from '../../lib/types.js';
   import OptionsSection from './OptionsSection.svelte';
   import ProviderCard from './ProviderCard.svelte';
-
-  type KeyStatus = 'valid' | 'invalid' | 'idle';
 
   const {
     providerSettings,
@@ -12,12 +9,6 @@
     keyStatus,
     onUpdateProvider,
     onValidateKey,
-  }: {
-    providerSettings: Settings['providers'];
-    validating: Partial<Record<ProviderId, boolean>>;
-    keyStatus: Partial<Record<ProviderId, KeyStatus>>;
-    onUpdateProvider: (provider: ProviderId, patch: Partial<ProviderSettings>) => void;
-    onValidateKey: (provider: ProviderId) => void;
   } = $props();
 </script>
 

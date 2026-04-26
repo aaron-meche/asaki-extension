@@ -1,5 +1,5 @@
 //
-// service-worker.ts
+// service-worker.js
 //
 // Asaki
 // by Aaron Meche
@@ -7,14 +7,13 @@
 
 import { cancelQuery, runQuery } from './orchestrator.js';
 import { loadHistory, loadSettings } from '../lib/storage.js';
-import type { PanelMessage, PendingQuery, SelectionContext, SwMessage } from '../lib/types.js';
 
-let panelPort: chrome.runtime.Port | null = null;
-let pendingExecution: PendingQuery | null = null;
-let pendingDraft: PendingQuery | null = null;
-let highlightedTabId: number | null = null;
+let panelPort = null;
+let pendingExecution = null;
+let pendingDraft = null;
+let highlightedTabId = null;
 
-const TEMPLATES: Record<string, string> = {
+const TEMPLATES = {
   eli5: 'Explain the following to me as if I were 5 years old:\n\n{{TEXT}}',
   summarize: 'Summarize the following in exactly 3 concise bullet points:\n\n{{TEXT}}',
   translate: 'Translate the following to Spanish:\n\n{{TEXT}}',
@@ -27,7 +26,7 @@ chrome.runtime.onConnect.addListener((port) => {
   }
 
   panelPort = port;
-  port.onMessage.addListener((message: PanelMessage) => void handlePanelMessage(message));
+  port.onMessage.addListener((message) => void handlePanelMessage(message));
   port.onDisconnect.addListener(() => {
     panelPort = null;
     cancelQuery();
@@ -70,7 +69,7 @@ chrome.action.onClicked.addListener((tab) => {
   void openPanel(tab.id);
 });
 
-function send(message: SwMessage): void {
+function send(message) {
   try {
     panelPort?.postMessage(message);
   } catch {
@@ -78,7 +77,7 @@ function send(message: SwMessage): void {
   }
 }
 
-function registerMenus(): void {
+function registerMenus() {
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
       id: 'ask',
@@ -123,10 +122,10 @@ function registerMenus(): void {
 }
 
 async function handleContextMenuSelection(
-  menuItemId: string,
-  selectionText: string,
-  tab?: chrome.tabs.Tab,
-): Promise<void> {
+  menuItemId,
+  selectionText,
+  tab,
+) {
   const settings = await loadSettings();
   const context = await collectTabContext(tab, selectionText);
   const query = context.text.trim() || selectionText.trim();
@@ -136,7 +135,7 @@ async function handleContextMenuSelection(
     return;
   }
 
-  const request: PendingQuery = {
+  const request = {
     query,
     sourceUrl: context.url,
     sourceTitle: context.title,
@@ -157,7 +156,7 @@ async function handleContextMenuSelection(
   await queueExecution(request);
 }
 
-async function handleShortcutTrigger(): Promise<void> {
+async function handleShortcutTrigger() {
   const settings = await loadSettings();
   const activeTab = await getActiveTab();
   const context = await collectTabContext(activeTab);
@@ -182,7 +181,7 @@ async function handleShortcutTrigger(): Promise<void> {
   });
 }
 
-async function handlePanelMessage(message: PanelMessage): Promise<void> {
+async function handlePanelMessage(message) {
   switch (message.type) {
     case 'PANEL_READY':
       return;
@@ -236,7 +235,7 @@ async function handlePanelMessage(message: PanelMessage): Promise<void> {
   }
 }
 
-async function queueDraft(request: PendingQuery): Promise<void> {
+async function queueDraft(request) {
   await openPanel(request.tabId);
 
   if (panelPort) {
@@ -246,7 +245,7 @@ async function queueDraft(request: PendingQuery): Promise<void> {
   }
 }
 
-async function queueExecution(request: PendingQuery): Promise<void> {
+async function queueExecution(request) {
   await openPanel(request.tabId);
   await highlightSelection(request.tabId);
 
@@ -257,7 +256,7 @@ async function queueExecution(request: PendingQuery): Promise<void> {
   }
 }
 
-async function startQuery(request: PendingQuery): Promise<void> {
+async function startQuery(request) {
   try {
     await runQuery(
       request.query,
@@ -272,7 +271,7 @@ async function startQuery(request: PendingQuery): Promise<void> {
         selectedProviders: request.selectedProviders,
       },
     );
-  } catch (error: unknown) {
+  } catch (error) {
     send({
       type: 'QUERY_ERROR',
       error: error instanceof Error ? error.message : String(error),
@@ -283,7 +282,7 @@ async function startQuery(request: PendingQuery): Promise<void> {
   }
 }
 
-async function openPanel(tabId?: number): Promise<void> {
+async function openPanel(tabId) {
   if (!tabId) {
     return;
   }
@@ -295,16 +294,16 @@ async function openPanel(tabId?: number): Promise<void> {
   }
 }
 
-async function getActiveTab(): Promise<chrome.tabs.Tab | undefined> {
+async function getActiveTab() {
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
   return tabs[0];
 }
 
 async function collectTabContext(
-  tab?: chrome.tabs.Tab,
+  tab,
   fallbackText = '',
-): Promise<SelectionContext> {
-  const baseContext: SelectionContext = {
+) {
+  const baseContext = {
     text: fallbackText,
     url: tab?.url ?? '',
     title: tab?.title ?? '',
@@ -316,7 +315,7 @@ async function collectTabContext(
   }
 
   try {
-    const context = await chrome.tabs.sendMessage(tab.id, { type: 'GET_SELECTION' }) as SelectionContext;
+    const context = await chrome.tabs.sendMessage(tab.id, { type: 'GET_SELECTION' });
     return {
       text: context.text || fallbackText,
       url: context.url || baseContext.url,
@@ -328,7 +327,7 @@ async function collectTabContext(
   }
 }
 
-async function highlightSelection(tabId?: number): Promise<void> {
+async function highlightSelection(tabId) {
   await clearHighlight();
 
   if (!tabId) {
@@ -343,7 +342,7 @@ async function highlightSelection(tabId?: number): Promise<void> {
   }
 }
 
-async function clearHighlight(): Promise<void> {
+async function clearHighlight() {
   if (!highlightedTabId) {
     return;
   }
