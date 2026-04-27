@@ -6,7 +6,7 @@ import Page from '../routes/+page.svelte';
 const target = document.getElementById('app');
 
 if (!target) {
-  throw new Error('Panel app mount target not found.');
+    throw new Error('Panel app mount target not found.');
 }
 
 mount(Page, { target });

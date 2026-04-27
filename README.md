@@ -14,14 +14,14 @@ Powered by **rueter-ai**, Asaki is built to streamline side-by-side model compar
 - Choose which model acts as the final arbitrator for orchestrated runs
 - Compare responses from OpenAI, Anthropic, Gemini, and Grok/xAI
 - Use quick prompt presets like:
-  - Explain like I'm 5
-  - Summarize in 3 bullets
-  - Translate to Spanish
-  - Critique this argument
+    - Explain like I'm 5
+    - Summarize in 3 bullets
+    - Translate to Spanish
+    - Critique this argument
 - Use a custom prompt flow from the context menu
 - Trigger Asaki with a keyboard shortcut:
-  - `Ctrl+Shift+K` on Windows/Linux
-  - `Command+Shift+K` on macOS
+    - `Ctrl+Shift+K` on Windows/Linux
+    - `Command+Shift+K` on macOS
 - Save run history and re-run or export previous results
 - Tune system prompt, temperature, max tokens, default providers, and page-context behavior
 
@@ -32,8 +32,8 @@ Powered by **rueter-ai**, Asaki is built to streamline side-by-side model compar
 3. Asaki opens the Chrome side panel.
 4. The selected text becomes the query or draft prompt.
 5. You choose either:
-   - **Single Model** mode for one provider
-   - **Orchestrated** mode for multiple providers
+      - **Single Model** mode for one provider
+      - **Orchestrated** mode for multiple providers
 6. In orchestrated mode, Asaki queries all selected providers and then sends the collected responses to your chosen arbitrator model for a single synthesized answer.
 
 ## Supported Providers
@@ -103,11 +103,11 @@ npm run icons
 
 ```text
 src/
-  background/   # service worker and orchestration logic
-  content/      # page selection and highlighting
-  panel/        # side panel UI
-  options/      # settings UI
-  lib/          # shared types, storage, provider logic, consensus helpers
+    background/   # service worker and orchestration logic
+    content/      # page selection and highlighting
+    panel/        # side panel UI
+    options/      # settings UI
+    lib/          # shared types, storage, provider logic, consensus helpers
 static/icons/   # extension and provider icons
 manifest.json   # Chrome extension manifest
 vite.config.js  # build configuration

@@ -6,7 +6,7 @@ import Page from '../routes/options/+page.svelte';
 const target = document.getElementById('app');
 
 if (!target) {
-  throw new Error('Options app mount target not found.');
+    throw new Error('Options app mount target not found.');
 }
 
 mount(Page, { target });
